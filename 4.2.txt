@@ -1,0 +1,55 @@
+class GraphColoring:
+    def __init__(self, adjacency_matrix, num_colors):
+        self.V = len(adjacency_matrix)
+        self.graph = adjacency_matrix
+        self.colors = [0] * self.V
+        self.color_names = ["", "Red", "Green", "Blue"]
+
+    # Function to check if it's safe to color a vertex
+    def is_safe(self, v, c):
+        for i in range(self.V):
+            if self.graph[v][i] == 1 and self.colors[i] == c:
+                return False
+        return True
+
+    # Backtracking function to color the graph
+    def solve_graph_coloring(self, v, m):
+        if v == self.V:
+            self.print_solution()
+            return True
+
+        for c in range(1, m + 1):
+            if self.is_safe(v, c):
+                self.colors[v] = c
+
+                if self.solve_graph_coloring(v + 1, m):
+                    return True
+
+                self.colors[v] = 0  # Backtrack
+
+        return False
+
+    # Function to print the color assignment
+    def print_solution(self):
+        print("Vertex Colors:")
+
+        for i in range(self.V):
+            print(f"Vertex {i} -> {self.color_names[self.colors[i]]}")
+
+    # Function to start the coloring process
+    def solve(self, m):
+        if not self.solve_graph_coloring(0, m):
+            print("No solution exists.")
+
+
+graph = [
+    [0, 1, 1, 1],
+    [1, 0, 1, 0],
+    [1, 1, 0, 1],
+    [1, 0, 1, 0]
+]
+
+num_colors = 3
+
+gc = GraphColoring(graph, num_colors)
+gc.solve(num_colors)

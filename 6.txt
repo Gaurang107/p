@@ -1,0 +1,112 @@
+def get_valid_number(prompt, data_type=int): 
+    while True: 
+        try: 
+            value = data_type(input(prompt)) 
+            return value 
+        except ValueError: 
+            print(" Invalid input! Please enter a valid number.") 
+ 
+ 
+ 
+def expert_rules(emp): 
+     
+    rules_fired = [] 
+     
+    if emp['experience'] >= 5 and emp['rating'] >= 8: 
+        rules_fired.append("R1: High experience and high rating") 
+     
+    if emp['projects'] >= 5: 
+        rules_fired.append("R2: Completed many projects") 
+     
+    if emp['attendance'] >= 90: 
+        rules_fired.append("R3: Excellent attendance") 
+     
+    if emp['rating'] < 5: 
+        rules_fired.append("R4: Low performance rating") 
+     
+    if emp['attendance'] < 70: 
+        rules_fired.append("R5: Poor attendance") 
+     
+    return rules_fired 
+ 
+ 
+
+def infer(emp): 
+     
+    rules = expert_rules(emp) 
+     
+    if ("R1: High experience and high rating" in rules and 
+        "R2: Completed many projects" in rules and 
+        "R3: Excellent attendance" in rules): 
+        decision = "Excellent Performance " 
+     
+    elif "R4: Low performance rating" in rules or "R5: Poor attendance" in rules: 
+        decision = "Poor Performance " 
+     
+    elif "R1: High experience and high rating" in rules: 
+        decision = "Good Performance " 
+     
+    else: 
+        decision = "Average Performance " 
+     
+    return decision, rules 
+ 
+ 
+
+def explain(decision, rules): 
+    print("\n--- Explanation ---") 
+    print("Decision:", decision) 
+    print("Rules Applied:") 
+     
+    if len(rules) == 0: 
+        print("No strong rules triggered") 
+    else: 
+        for r in rules: 
+            print("-", r) 
+ 
+ 
+
+def get_input(): 
+    print("\nEnter Employee Details") 
+     
+    name = input("Name: ") 
+     
+    exp = get_valid_number("Experience (years): ", int) 
+    proj = get_valid_number("Projects completed: ", int) 
+    rating = get_valid_number("Performance rating (1-10): ", float) 
+    attendance = get_valid_number("Attendance (%): ", float) 
+     
+
+    if rating < 1 or rating > 10: 
+        print(" Rating should be between 1 and 10") 
+     
+    if attendance < 0 or attendance > 100: 
+        print(" Attendance should be between 0 and 100") 
+     
+    return { 
+        "name": name, 
+        "experience": exp, 
+        "projects": proj, 
+        "rating": rating, 
+        "attendance": attendance 
+    } 
+ 
+ 
+
+print("===== AI EXPERT SYSTEM: EMPLOYEE PERFORMANCE =====") 
+ 
+while True: 
+    emp = get_input() 
+     
+    decision, rules = infer(emp) 
+     
+    print("\n--- RESULT ---") 
+    print("Employee:", emp['name']) 
+    print("Performance:", decision) 
+     
+    explain(decision, rules) 
+     
+    choice = input("\nEvaluate another employee? (yes/no): ") 
+    if choice.lower() != 'yes': 
+        print("System Closed.") 
+        break
